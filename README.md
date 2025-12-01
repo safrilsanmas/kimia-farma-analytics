@@ -1,54 +1,28 @@
 # kimia-farma-analytics
-CREATE OR REPLACE TABLE `Rakamin_KF_Analytics.Analisis` AS
-SELECT
-    t.transaction_id,
-    t.date,
-    
-    -- Kolom waktu untuk analisis
-    EXTRACT(YEAR FROM t.date) AS year,
-    FORMAT_DATE('%Y-%m', t.date) AS month,
+# Kimia Farma Business Performance Analytics (2020–2023)
 
-    -- Informasi cabang
-    t.branch_id,
-    k.branch_name,
-    k.kota,
-    k.provinsi,
-    k.rating AS rating_cabang,
+This repository contains SQL scripts, data models, and dashboard design used for the Project-Based Internship: *Analisis Kinerja Bisnis Kimia Farma*.
 
-    -- Informasi transaksi & produk
-    t.customer_name,
-    t.product_id,
-    p.product_name,
-    t.price AS actual_price,
-    t.discount_percentage,
+## 📌 Contents
+- **01_create_analisis_table.sql** → SQL untuk membuat tabel analisis utama di BigQuery
+- **Dashboard Design (Looker Studio)** → Insight, KPI, dan layout
+- **Business Summary** → Temuan utama dari analisis
 
-    -- Persentase gross laba berdasarkan harga
-    CASE 
-        WHEN t.price <= 50000 THEN 0.10
-        WHEN t.price > 50000 AND t.price <= 100000 THEN 0.15
-        WHEN t.price > 100000 AND t.price <= 300000 THEN 0.20
-        WHEN t.price > 300000 AND t.price <= 500000 THEN 0.25
-        ELSE 0.30
-    END AS persentase_gross_laba,
+## 🛠 Tools Used
+- Google BigQuery  
+- Looker Studio  
+- Google Cloud Platform  
+- GitHub  
 
-    -- Nett sales = harga - diskon
-    (t.price - (t.price * t.discount_percentage)) AS nett_sales,
+## 📊 Main Metrics
+- Nett Sales  
+- Nett Profit  
+- Gross Profit Percentage  
+- Product Performance  
+- Customer Analysis  
+- Branch Performance  
 
-    -- Nett profit = nett_sales * persentase gross laba
-    (t.price - (t.price * t.discount_percentage)) *
-    CASE 
-        WHEN t.price <= 50000 THEN 0.10
-        WHEN t.price > 50000 AND t.price <= 100000 THEN 0.15
-        WHEN t.price > 100000 AND t.price <= 300000 THEN 0.20
-        WHEN t.price > 300000 AND t.price <= 500000 THEN 0.25
-        ELSE 0.30
-    END AS nett_profit,
+## 👨‍💻 Author
+Safril Ahmadi Sanmas Putra  
+Data Analyst | Statistics Graduate
 
-    -- Rating transaksi sebagai indikator layanan
-    t.rating AS rating_transaksi
-
-FROM `Rakamin_KF_Analytics.transaksi` AS t
-JOIN `Rakamin_KF_Analytics.kantor_cabang` AS k
-    ON t.branch_id = k.branch_id
-JOIN `Rakamin_KF_Analytics.product` AS p
-    ON t.product_id = p.product_id;
