@@ -84,11 +84,3 @@ Hasil analisis disajikan dalam bentuk:
 5. Interpretasi hasil dan penyusunan insight bisnis  
 
 ---
-
-## 📁 Repository Structure
-```bash
-kimia-farma-analytics/
-│
-├── Analisis.sql        # SQL script untuk membangun tabel dan analisis utama
-├── laporan.pdf        # Laporan ringkasan hasil analisis
-├── README.md          # Dokumentasi proyek
